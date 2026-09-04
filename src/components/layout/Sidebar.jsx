@@ -12,13 +12,15 @@ import {
   Settings,
   X,
   Scale,
-  Award
+  Award,
+  MessageSquareWarning
 } from 'lucide-react';
 
 export const MENU_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'scan', label: 'Scan Product', icon: Scan, badge: 'Live AI' },
   { id: 'upload', label: 'Upload Label', icon: UploadCloud },
+  { id: 'grievance', label: 'Grievance & Dispute Bot', icon: MessageSquareWarning, badge: '15-Day Token' },
   { id: 'reports', label: 'Compliance Reports', icon: FileCheck },
   { id: 'repository', label: 'Product Repository', icon: PackageSearch },
   { id: 'violations', label: 'Violations', icon: AlertOctagon, alertCount: 4 },

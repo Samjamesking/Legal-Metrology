@@ -24,6 +24,7 @@ import SuggestionsPage from './components/suggestions/SuggestionsPage';
 import AnalyticsPage from './components/analytics/AnalyticsPage';
 import InspectorDashboardPage from './components/inspector/InspectorDashboardPage';
 import SettingsPage from './components/settings/SettingsPage';
+import ConsumerGrievancePage from './components/grievance/ConsumerGrievancePage';
 
 // Modals
 import ProductDetailsModal from './components/repository/ProductDetailsModal';
@@ -202,6 +203,7 @@ export default function App() {
                     onAnalyze={() => handleAnalyze()}
                     isAnalyzing={isAnalyzing}
                     onOpenCameraModal={() => setCameraModalOpen(true)}
+                    onOpenGrievance={() => setActivePage('grievance')}
                   />
                 </div>
 
@@ -322,7 +324,12 @@ export default function App() {
             <InspectorDashboardPage />
           )}
 
-          {/* View 10: Settings */}
+          {/* View 10: Consumer Grievance & Dispute Redressal Bot */}
+          {activePage === 'grievance' && (
+            <ConsumerGrievancePage />
+          )}
+
+          {/* View 11: Settings */}
           {activePage === 'settings' && (
             <SettingsPage
               darkMode={darkMode}
@@ -332,6 +339,31 @@ export default function App() {
             />
           )}
         </main>
+
+        {/* Floating Quick Action Button for Dispute Bot (Visible when not on grievance page) */}
+        {activePage !== 'grievance' && (
+          <aside
+            aria-label="Consumer grievance quick action"
+            className="fixed bottom-6 right-6 z-40 hidden sm:flex items-center gap-2"
+          >
+            <button
+              onClick={() => setActivePage('grievance')}
+              className="px-4 py-3 rounded-full bg-gradient-to-r from-gov-blue to-indigo-700 hover:from-gov-blueLight hover:to-indigo-600 text-white shadow-xl shadow-gov-blue/30 border border-white/20 flex items-center gap-2.5 group transition-all transform hover:-translate-y-0.5"
+            >
+              <div className="w-6 h-6 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-xs shadow-xs">
+                ⚖️
+              </div>
+              <div className="text-left">
+                <span className="text-xs font-black block leading-tight">
+                  Damaged or Expired?
+                </span>
+                <span className="text-[10px] text-blue-200 block leading-tight">
+                  AI Dispute Bot & 15-Day Token
+                </span>
+              </div>
+            </button>
+          </aside>
+        )}
 
         {/* Global Footer */}
         <Footer />
