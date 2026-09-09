@@ -10,7 +10,7 @@ import {
   Zap
 } from 'lucide-react';
 
-export default function ViolationSummary({ product, onOpenViolationsPage }) {
+export default function ViolationSummary({ product, onOpenViolationsPage, onOpenCopilot }) {
   if (!product) return null;
 
   const violations = product.violations || [];
@@ -35,13 +35,24 @@ export default function ViolationSummary({ product, onOpenViolationsPage }) {
             </div>
           </div>
 
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-            violations.length === 0
-              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300'
-              : 'bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300'
-          }`}>
-            {violations.length === 0 ? 'Compliant' : `${violations.length} Non-Compliances`}
-          </span>
+          <div className="flex items-center gap-2">
+            {violations.length > 0 && onOpenCopilot && (
+              <button
+                onClick={onOpenCopilot}
+                className="text-[10px] font-bold px-2 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white shadow-xs flex items-center gap-1"
+              >
+                <Sparkles className="w-3 h-3 text-amber-300" />
+                AI Rectify
+              </button>
+            )}
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+              violations.length === 0
+                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300'
+                : 'bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300'
+            }`}>
+              {violations.length === 0 ? 'Compliant' : `${violations.length} Non-Compliances`}
+            </span>
+          </div>
         </div>
 
         {/* Violations List / Zero State */}

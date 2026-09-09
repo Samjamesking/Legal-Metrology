@@ -26,6 +26,21 @@ import InspectorDashboardPage from './components/inspector/InspectorDashboardPag
 import SettingsPage from './components/settings/SettingsPage';
 import ConsumerGrievancePage from './components/grievance/ConsumerGrievancePage';
 
+// Advanced AI Compliance Copilot & Enterprise Modules
+import ComplianceCopilotPanel from './components/copilot/ComplianceCopilotPanel';
+import CVStudioModal from './components/cv/CVStudioModal';
+import LabelGeneratorPage from './components/labelGenerator/LabelGeneratorPage';
+import CertificateVerificationModal from './components/certificate/CertificateVerificationModal';
+import ManufacturerAnalyticsView from './components/manufacturer/ManufacturerAnalyticsView';
+import IndiaComplianceHeatmap from './components/heatmap/IndiaComplianceHeatmap';
+import ConsumerScanPortal from './components/consumer/ConsumerScanPortal';
+import AdvancedAdminDashboard from './components/admin/AdvancedAdminDashboard';
+import FontSizeValidationView from './components/cv/FontSizeValidationView';
+import LabelPlacementView from './components/cv/LabelPlacementView';
+import CounterfeitDetectionView from './components/cv/CounterfeitDetectionView';
+import RiskPredictionWidget from './components/risk/RiskPredictionWidget';
+import MultiLangAnalysisView from './components/multilang/MultiLangAnalysisView';
+
 // Modals
 import ProductDetailsModal from './components/repository/ProductDetailsModal';
 import ReportModal from './components/modals/ReportModal';
@@ -51,12 +66,24 @@ export default function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  // Modals
+  // Modals & Panels
   const [detailsModalProduct, setDetailsModalProduct] = useState(null);
   const [reportModalProduct, setReportModalProduct] = useState(null);
   const [cameraModalOpen, setCameraModalOpen] = useState(false);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [helpModalOpen, setHelpModalOpen] = useState(false);
+  const [copilotOpen, setCopilotOpen] = useState(false);
+  const [cvModalOpen, setCvModalOpen] = useState(false);
+  const [cvModalInitialTab, setCvModalInitialTab] = useState('fontSize');
+  const [certificateModalOpen, setCertificateModalOpen] = useState(false);
+
+  // Auto-detect ?verify= URL parameter
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('verify')) {
+      setCertificateModalOpen(true);
+    }
+  }, []);
 
   // Synchronize Dark Mode on <html> element
   useEffect(() => {
@@ -212,6 +239,12 @@ export default function App() {
                   <ComplianceResults
                     product={selectedProduct}
                     onSelectField={(decl) => setHelpModalOpen(true)}
+                    onOpenCopilot={() => setCopilotOpen(true)}
+                    onOpenCV={(tab = 'fontSize') => {
+                      setCvModalInitialTab(tab);
+                      setCvModalOpen(true);
+                    }}
+                    onOpenCertificate={() => setCertificateModalOpen(true)}
                   />
                 </div>
 
@@ -220,12 +253,23 @@ export default function App() {
                   <ViolationSummary
                     product={selectedProduct}
                     onOpenViolationsPage={() => setActivePage('violations')}
+                    onOpenCopilot={() => setCopilotOpen(true)}
                   />
                 </div>
               </div>
 
               {/* Synchronized Dual-Panel: Product Details (One Side) & Ingredients (Other Side) */}
               <ProductIngredientsSplitView product={selectedProduct} />
+
+              {/* AI Risk Prediction & Multi-Language Compliance Intelligence Row */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                <div className="lg:col-span-6">
+                  <RiskPredictionWidget product={selectedProduct} />
+                </div>
+                <div className="lg:col-span-6">
+                  <MultiLangAnalysisView product={selectedProduct} />
+                </div>
+              </div>
 
               {/* Analytics Section (Recharts: Line, Pie, Bar) */}
               <AnalyticsSection />
@@ -236,6 +280,131 @@ export default function App() {
                 onViewReport={(p) => setReportModalProduct(p)}
               />
             </div>
+          )}
+
+          {/* View: AI Compliance Copilot Studio */}
+          {activePage === 'copilot' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-5 rounded-gov border border-slate-200/90 dark:border-slate-800 shadow-soft">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 text-xs font-bold mb-2">
+                    <span>✨ Legal Metrology AI Copilot Command</span>
+                  </div>
+                  <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
+                    AI Compliance Copilot Command Center
+                  </h1>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Statutory Rule References, AI Rectification Advisories, and Master Compliant Declarations for <strong>{selectedProduct.name}</strong>.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCopilotOpen(true)}
+                    className="px-4 py-2 rounded-gov text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-600/25 flex items-center gap-1.5"
+                  >
+                    <span>Launch Side Drawer Copilot</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Copilot Embedded Inspection Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="lg:col-span-6 space-y-4">
+                  <ComplianceResults
+                    product={selectedProduct}
+                    onSelectField={(decl) => setHelpModalOpen(true)}
+                    onOpenCopilot={() => setCopilotOpen(true)}
+                    onOpenCV={(tab = 'fontSize') => {
+                      setCvModalInitialTab(tab);
+                      setCvModalOpen(true);
+                    }}
+                    onOpenCertificate={() => setCertificateModalOpen(true)}
+                  />
+                  <RiskPredictionWidget product={selectedProduct} />
+                </div>
+
+                <div className="lg:col-span-6 space-y-4">
+                  <ViolationSummary
+                    product={selectedProduct}
+                    onOpenViolationsPage={() => setActivePage('violations')}
+                    onOpenCopilot={() => setCopilotOpen(true)}
+                  />
+                  <MultiLangAnalysisView product={selectedProduct} />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* View: Dedicated Computer Vision Inspection Suite */}
+          {activePage === 'cv-studio' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-5 rounded-gov border border-slate-200/90 dark:border-slate-800 shadow-soft">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-gov-blue dark:text-blue-300 text-xs font-bold mb-2">
+                    <span>👁️ Computer Vision Inspection Suite</span>
+                  </div>
+                  <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
+                    Rule 7 Font Sizing, Layout & Anti-Tamper Vision
+                  </h1>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Inspecting: <strong>{selectedProduct.name}</strong> ({selectedProduct.brand})
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <select
+                    value={selectedProduct.id}
+                    onChange={(e) => {
+                      const found = SAMPLE_PRODUCTS.find(p => p.id === e.target.value);
+                      if (found) setSelectedProduct(found);
+                    }}
+                    className="px-3 py-2 rounded-gov text-xs font-bold bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"
+                  >
+                    {SAMPLE_PRODUCTS.map(p => (
+                      <option key={p.id} value={p.id}>{p.name} ({p.complianceScore}%)</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Full Computer Vision Tabs View */}
+              <div className="space-y-6">
+                <FontSizeValidationView product={selectedProduct} />
+                <LabelPlacementView product={selectedProduct} />
+                <CounterfeitDetectionView product={selectedProduct} />
+              </div>
+            </div>
+          )}
+
+          {/* View: Generate Compliant Label Template */}
+          {activePage === 'label-gen' && (
+            <LabelGeneratorPage />
+          )}
+
+          {/* View: Consumer Citizen Scan Mode */}
+          {activePage === 'consumer-mode' && (
+            <ConsumerScanPortal onOpenQrModal={() => setQrModalOpen(true)} />
+          )}
+
+          {/* View: India Compliance Heatmap */}
+          {activePage === 'india-heatmap' && (
+            <IndiaComplianceHeatmap />
+          )}
+
+          {/* View: Manufacturer Registry & Risk Scoring */}
+          {activePage === 'manufacturers' && (
+            <ManufacturerAnalyticsView
+              onSelectProduct={(p) => {
+                setSelectedProduct(p);
+                setActivePage('scan');
+              }}
+            />
+          )}
+
+          {/* View: Advanced Admin Dashboard */}
+          {activePage === 'admin-dashboard' && (
+            <AdvancedAdminDashboard />
           )}
 
           {/* View 2: Dedicated Scan Studio */}
@@ -340,12 +509,31 @@ export default function App() {
           )}
         </main>
 
-        {/* Floating Quick Action Button for Dispute Bot (Visible when not on grievance page) */}
-        {activePage !== 'grievance' && (
-          <aside
-            aria-label="Consumer grievance quick action"
-            className="fixed bottom-6 right-6 z-40 hidden sm:flex items-center gap-2"
+        {/* Floating Quick Action Group */}
+        <aside
+          aria-label="Quick AI Copilot & Dispute Actions"
+          className="fixed bottom-6 right-6 z-40 hidden sm:flex items-center gap-2.5"
+        >
+          {/* Floating AI Compliance Copilot Button */}
+          <button
+            onClick={() => setCopilotOpen(true)}
+            className="px-4 py-3 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-xl shadow-purple-600/30 border border-white/20 flex items-center gap-2.5 group transition-all transform hover:-translate-y-0.5"
           >
+            <div className="w-6 h-6 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-xs shadow-xs">
+              ✨
+            </div>
+            <div className="text-left">
+              <span className="text-xs font-black block leading-tight">
+                AI Compliance Copilot
+              </span>
+              <span className="text-[10px] text-purple-200 block leading-tight">
+                Rules, 2011 Rectification
+              </span>
+            </div>
+          </button>
+
+          {/* Floating Consumer Dispute Bot Button */}
+          {activePage !== 'grievance' && (
             <button
               onClick={() => setActivePage('grievance')}
               className="px-4 py-3 rounded-full bg-gradient-to-r from-gov-blue to-indigo-700 hover:from-gov-blueLight hover:to-indigo-600 text-white shadow-xl shadow-gov-blue/30 border border-white/20 flex items-center gap-2.5 group transition-all transform hover:-translate-y-0.5"
@@ -358,19 +546,41 @@ export default function App() {
                   Damaged or Expired?
                 </span>
                 <span className="text-[10px] text-blue-200 block leading-tight">
-                  AI Dispute Bot & 15-Day Token
+                  Dispute Bot & Token
                 </span>
               </div>
             </button>
-          </aside>
-        )}
+          )}
+        </aside>
 
         {/* Global Footer */}
         <Footer />
       </div>
 
-      {/* MODALS */}
-      {/* 1. Product Details Modal */}
+      {/* MODALS & PANELS */}
+      {/* 1. AI Compliance Copilot Side Panel */}
+      <ComplianceCopilotPanel
+        product={selectedProduct}
+        isOpen={copilotOpen}
+        onClose={() => setCopilotOpen(false)}
+      />
+
+      {/* 2. Computer Vision Inspection Suite Modal */}
+      <CVStudioModal
+        product={selectedProduct}
+        isOpen={cvModalOpen}
+        onClose={() => setCvModalOpen(false)}
+        initialTab={cvModalInitialTab}
+      />
+
+      {/* 3. QR-Based Compliance Certificate Modal */}
+      <CertificateVerificationModal
+        product={selectedProduct}
+        isOpen={certificateModalOpen}
+        onClose={() => setCertificateModalOpen(false)}
+      />
+
+      {/* 4. Product Details Modal */}
       {detailsModalProduct && (
         <ProductDetailsModal
           product={detailsModalProduct}
@@ -379,7 +589,7 @@ export default function App() {
         />
       )}
 
-      {/* 2. Official Inspection Report Certificate Modal */}
+      {/* 5. Official Inspection Report Certificate Modal */}
       {reportModalProduct && (
         <ReportModal
           product={reportModalProduct}
@@ -387,14 +597,14 @@ export default function App() {
         />
       )}
 
-      {/* 3. Real-Time Camera Scan Modal */}
+      {/* 6. Real-Time Camera Scan Modal */}
       <CameraScanModal
         isOpen={cameraModalOpen}
         onClose={() => setCameraModalOpen(false)}
         onCaptureProduct={handleCaptureFromCamera}
       />
 
-      {/* 4. QR Code Verification Modal */}
+      {/* 7. QR Code Verification Modal */}
       <QrVerificationModal
         isOpen={qrModalOpen}
         onClose={() => setQrModalOpen(false)}
@@ -404,7 +614,7 @@ export default function App() {
         }}
       />
 
-      {/* 5. Help Reference Modal */}
+      {/* 8. Help Reference Modal */}
       <HelpModal
         isOpen={helpModalOpen}
         onClose={() => setHelpModalOpen(false)}

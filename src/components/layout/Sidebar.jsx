@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   LayoutDashboard,
   Scan,
@@ -13,12 +12,26 @@ import {
   X,
   Scale,
   Award,
-  MessageSquareWarning
+  MessageSquareWarning,
+  Bot,
+  FileBadge2,
+  ScanEye,
+  Smartphone,
+  Flame,
+  Building2,
+  Shield
 } from 'lucide-react';
 
 export const MENU_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'copilot', label: 'Compliance Copilot', icon: Bot, badge: 'AI Copilot' },
   { id: 'scan', label: 'Scan Product', icon: Scan, badge: 'Live AI' },
+  { id: 'cv-studio', label: 'CV Inspection Suite', icon: ScanEye, badge: 'Vision AI' },
+  { id: 'label-gen', label: 'Generate Compliant Label', icon: FileBadge2, badge: 'PDF Export' },
+  { id: 'consumer-mode', label: 'Consumer Scan Mode', icon: Smartphone, badge: 'Citizen' },
+  { id: 'india-heatmap', label: 'India Heatmap', icon: Flame, badge: 'State GIS' },
+  { id: 'manufacturers', label: 'Manufacturer Registry', icon: Building2, badge: 'Risk DB' },
+  { id: 'admin-dashboard', label: 'Admin & Regulators', icon: Shield, badge: 'Surveillance' },
   { id: 'upload', label: 'Upload Label', icon: UploadCloud },
   { id: 'grievance', label: 'Grievance & Dispute Bot', icon: MessageSquareWarning, badge: '15-Day Token' },
   { id: 'reports', label: 'Compliance Reports', icon: FileCheck },

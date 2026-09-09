@@ -9,7 +9,13 @@ import {
 } from 'lucide-react';
 import { MANDATORY_DECLARATIONS } from '../../data/legalMetrologyRules';
 
-export default function ComplianceResults({ product, onSelectField }) {
+export default function ComplianceResults({
+  product,
+  onSelectField,
+  onOpenCopilot,
+  onOpenCV,
+  onOpenCertificate
+}) {
   if (!product) return null;
 
   const score = product.complianceScore || 0;
@@ -143,10 +149,37 @@ export default function ComplianceResults({ product, onSelectField }) {
         </div>
       </div>
 
-      {/* Footer Info Pill */}
-      <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
-        <span>Principal Display Panel (PDP):</span>
-        <span className="font-bold text-slate-700 dark:text-slate-300">{product.pdpAreaCm2} cm²</span>
+      {/* Footer Info Pill & Quick Actions */}
+      <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-2">
+        <div className="flex items-center justify-between text-[11px] text-slate-500">
+          <span>Principal Display Panel (PDP):</span>
+          <span className="font-bold text-slate-700 dark:text-slate-300">{product.pdpAreaCm2} cm²</span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 pt-1">
+          <button
+            onClick={onOpenCopilot}
+            className="w-full py-1.5 px-2 rounded-gov bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/80 text-[11px] font-bold hover:bg-purple-100 flex items-center justify-center gap-1 shadow-xs"
+          >
+            <span>✨ AI Copilot</span>
+          </button>
+
+          <button
+            onClick={onOpenCV}
+            className="w-full py-1.5 px-2 rounded-gov bg-blue-50 dark:bg-blue-950/50 text-gov-blue dark:text-blue-300 border border-blue-200 dark:border-blue-800/80 text-[11px] font-bold hover:bg-blue-100 flex items-center justify-center gap-1 shadow-xs"
+          >
+            <span>👁️ CV Inspection</span>
+          </button>
+        </div>
+
+        {product.complianceScore >= 80 && (
+          <button
+            onClick={onOpenCertificate}
+            className="w-full py-1.5 px-2 rounded-gov bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-600/20"
+          >
+            <span>📜 View Official QR Certificate</span>
+          </button>
+        )}
       </div>
     </div>
   );

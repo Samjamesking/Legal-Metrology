@@ -18,6 +18,10 @@ import PackagingPreview from '../common/PackagingPreview';
 import ProductIngredientsSplitView from '../dashboard/ProductIngredientsSplitView';
 import { SAMPLE_PRODUCTS } from '../../data/sampleProducts';
 import { FONT_SIZE_STANDARDS, MULTI_LANG_STRINGS } from '../../data/legalMetrologyRules';
+import ComplianceCopilotPanel from '../copilot/ComplianceCopilotPanel';
+import CVStudioModal from '../cv/CVStudioModal';
+import RiskPredictionWidget from '../risk/RiskPredictionWidget';
+import MultiLangAnalysisView from '../multilang/MultiLangAnalysisView';
 
 export default function StudioScannerPage({
   selectedProduct,
@@ -30,6 +34,8 @@ export default function StudioScannerPage({
   const [activeBoxIndex, setActiveBoxIndex] = useState(null);
   const [showBoundingBoxes, setShowBoundingBoxes] = useState(true);
   const [pdpArea, setPdpArea] = useState(selectedProduct?.pdpAreaCm2 || 250);
+  const [showCopilot, setShowCopilot] = useState(false);
+  const [showCVModal, setShowCVModal] = useState(false);
 
   // Find standard for current PDP area
   const fontStandard = FONT_SIZE_STANDARDS.find(s => pdpArea <= s.maxPdpAreaCm2) || FONT_SIZE_STANDARDS[0];
@@ -52,7 +58,21 @@ export default function StudioScannerPage({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => setShowCopilot(true)}
+            className="px-3 py-2 rounded-gov text-xs font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 flex items-center gap-1.5 shadow-xs hover:bg-purple-100"
+          >
+            <Sparkles className="w-4 h-4 text-purple-600" />
+            AI Copilot
+          </button>
+          <button
+            onClick={() => setShowCVModal(true)}
+            className="px-3 py-2 rounded-gov text-xs font-bold bg-blue-50 dark:bg-blue-950/60 text-gov-blue dark:text-blue-300 border border-blue-200 dark:border-blue-800 flex items-center gap-1.5 shadow-xs hover:bg-blue-100"
+          >
+            <Layers className="w-4 h-4 text-gov-blue" />
+            CV Inspector
+          </button>
           <button
             onClick={onToggleVoice}
             className="px-3 py-2 rounded-gov text-xs font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center gap-2 shadow-xs hover:bg-emerald-100"
@@ -274,6 +294,30 @@ export default function StudioScannerPage({
 
       {/* Synchronized Dual-Panel: Product Details (One Side) & Ingredients (Other Side) */}
       <ProductIngredientsSplitView product={product} />
+
+      {/* AI Risk Prediction & Multi-Language Compliance Intelligence Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div className="lg:col-span-6">
+          <RiskPredictionWidget product={product} />
+        </div>
+        <div className="lg:col-span-6">
+          <MultiLangAnalysisView product={product} />
+        </div>
+      </div>
+
+      {/* AI Compliance Copilot Modal */}
+      <ComplianceCopilotPanel
+        product={product}
+        isOpen={showCopilot}
+        onClose={() => setShowCopilot(false)}
+      />
+
+      {/* Computer Vision Studio Suite Modal */}
+      <CVStudioModal
+        product={product}
+        isOpen={showCVModal}
+        onClose={() => setShowCVModal(false)}
+      />
     </div>
   );
 }
